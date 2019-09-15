@@ -1,0 +1,21 @@
+{
+  "name": "asamblea",
+  "version": "1.0.0",
+  "description": "This website will present the list of congressmen and women in the Legislative Assembly of El Salvador",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "website",
+    "assembly",
+    "elsalvador",
+    "javascript"
+  ],
+  "author": "@mariomenjr",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "trae": "^1.4.2"
+  }
+}

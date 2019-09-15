@@ -1,11 +1,13 @@
+"use strict";
+
 const trae = require("trae");
 const cheerio = require("cheerio");
 
-const { pages } = require("./config/target");
+const { URLS } = require("./config");
 
 (async function() {
   try {
-    const repssUrl = pages.listRepresentatives;
+    const repssUrl = URLS.listRepresentatives;
 
     const response = await trae.get(repssUrl);
     const data = response.data;

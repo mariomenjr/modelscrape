@@ -11,6 +11,4 @@ function makeUrl(
   return endpoint => `${params.protocol}://${params.domain}/${endpoint}`;
 }
 
-function makePage() {}
-
-module.exports = { makeUrl, makePage };
+module.exports = { makeUrl };

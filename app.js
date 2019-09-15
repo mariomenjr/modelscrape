@@ -1,22 +1,6 @@
 "use strict";
 
-const trae = require("trae");
-const cheerio = require("cheerio");
-
-const { URLS } = require("./config");
-
-(async function() {
-  try {
-    const repssUrl = URLS.listRepresentatives;
-
-    const response = await trae.get(repssUrl);
-    const data = response.data;
-
-    const $ = cheerio.load(data);
-    const str = $(".diputadoDetalles");
-
-    throw new Error();
-  } catch (error) {
-    console.error(error);
-  }
-})();
+// Use a nice table to print the report or error
+require("./src")()
+  .then(msg => console.log(msg))
+  .catch(err => console.error(err));

@@ -1,11 +1,11 @@
 "use strict";
 
-const { makeUrl, makePage } = require("./helpers");
-const { PAGES_COLLECTION } = require("./config");
+const { makeUrl } = require("./helpers");
+const { PAGES_COLLECTION: PAGES } = require("./config");
 
-module.exports = {
-  URLS: {
-    listRepresentatives: makeUrl()("diputados")
-  },
-  PAGES: PAGES_COLLECTION
-};
+const URLS = PAGES.reduce((urls, { endpoint, name }) => {
+  urls[name] = makeUrl()(endpoint);
+  return urls;
+}, {});
+
+module.exports = { URLS, PAGES };

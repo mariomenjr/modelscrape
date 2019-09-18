@@ -1,23 +1,8 @@
-"use strict";
+'use strict';
 
-const trae = require("trae");
-const cheerio = require("cheerio");
+const Types = require("./types");
+const config = require("./config");
 
-const { URLS } = require("../config");
+const loader = require("./loader");
 
-module.exports = async () => {
-  try {
-    const repssUrl = URLS.congressMembers;
-
-    const response = await trae.get(repssUrl);
-    const html = response.data;
-
-    const $ = cheerio.load(html);
-    const str = $(".diputadoDetalles");
-
-    return "Ok";
-  } catch (error) {
-    return error;
-  }
-  // Sent back a report of what happened
-};
+module.exports = { ...Types, config, loader };

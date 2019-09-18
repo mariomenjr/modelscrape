@@ -1,5 +1,5 @@
 {
-  "name": "asamblea",
+  "name": "asamblea-audit",
   "version": "1.0.0",
   "description": "This website will present the list of congressmen and women in the Legislative Assembly of El Salvador",
   "main": "app.js",

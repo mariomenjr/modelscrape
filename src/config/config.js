@@ -1,5 +1,8 @@
-"use strict";
+'use strict';
 
+/**
+ * The default template object to fetch information from a website
+ */
 const PAGE_CONGRESS_MEMBERS = {
   name: "congressMember",
   query: ".diputadoDetalles > .diputados-foto-detalles",
@@ -23,9 +26,18 @@ const PAGE_CONGRESS_MEMBERS = {
 };
 
 module.exports = {
+  /**
+   * The domain part of the URL. Sample: www.google.com
+   */
   ROOT_DOMAIN: "www.asamblea.gob.sv",
+  /**
+   * The protocol part of a URL. Sample http or https
+   */
   ROOT_PROTOCOL: "https",
 
+  /**
+   * A collection of templates objects to fetch information from a website
+   */
   PAGES_COLLECTION: [
     {
       name: "congressMembers",

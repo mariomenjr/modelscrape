@@ -6,7 +6,7 @@ const cheerio = require("cheerio");
 module.exports = async ({ url, queryObj }) => {
   try {
     const resp = await trae.get(url);
-    const html = response.data;
+    const html = resp.data;
 
     const $ = cheerio.load(html);
 

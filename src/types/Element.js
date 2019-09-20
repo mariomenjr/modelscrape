@@ -1,7 +1,13 @@
-'use strict';
+"use strict";
 
-module.exports = class Element {
-    name = null
-    query = null
-    attrs = []
+const { appendReadonlyProps } = require("../utils");
+
+module.exports = function Element(params = {}) {
+    appendReadonlyProps(this, params, {
+        name: null,
+        query: null
+    });
+
+    this.attrs = {};
+    this.value = null;
 };

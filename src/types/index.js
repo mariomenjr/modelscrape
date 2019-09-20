@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const Collection = require("./Collection");
-const Item = require("./Item");
+const Entity = require("./Entity");
+const Prop = require("./Prop");
 const Element = require("./Element");
 
-module.exports = { Element, Collection, Item };
+module.exports = { Element, Entity, Prop };

@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const Types = require("./types");
 const config = require("./config");

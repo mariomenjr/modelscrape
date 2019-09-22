@@ -4,7 +4,7 @@ const trae = require("trae");
 const cheerio = require("cheerio");
 
 const { URLS } = require("./config");
-const { Entity, Prop, Element } = require("./types");
+const { Entity, Prop } = require("./types");
 
 async function fetchHtmlAndAddCheerio(page) {
     const url = URLS[page.name];
@@ -43,7 +43,7 @@ function produceEntityCollection($) {
                 });
 
                 entityInstance.attrs = selectNodeAttributes(entity, entityNode);
-                entityInstance.items = props.map(prop => {
+                entityInstance.props = props.map(prop => {
                     const propNodes = $(prop.query, entityNode);
                     const propsArray = propNodes
                         .map((j, propNode) => {
@@ -52,7 +52,10 @@ function produceEntityCollection($) {
                                 query: prop.query
                             });
 
-                            propInstance.value = propNode.nodeValue;
+                            propInstance.value =
+                                propNode.firstChild === null
+                                    ? null
+                                    : propNode.firstChild.data;
                             propInstance.attrs = selectNodeAttributes(
                                 prop,
                                 propNode
@@ -72,16 +75,13 @@ function produceEntityCollection($) {
 function populatePageCollections(page) {
     const { $, collections } = page;
 
-    const what = collections.map(produceEntityCollection($));
-    return what;
+    return collections.map(produceEntityCollection($));
 }
 
 module.exports = async ({ url, pages }) => {
     try {
         pages = await Promise.all(pages.map(fetchHtmlAndAddCheerio));
-        const res = pages.map(populatePageCollections);
-
-        return res;
+        return pages.map(populatePageCollections);
     } catch (error) {
         return error;
     }

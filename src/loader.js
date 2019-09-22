@@ -6,16 +6,28 @@ const cheerio = require("cheerio");
 const { URLS } = require("./config");
 const { Entity, Prop } = require("./types");
 
-async function fetchHtmlAndAddCheerio(page) {
-    const url = URLS[page.name];
+/**
+ * Fetch HTML for PageTemplate
+ *
+ * @param {PageTemplate} pageTemplate
+ * @return PageTemplate
+ */
+async function fetchHtmlAndAddCheerio(pageTemplate) {
+    const url = URLS[pageTemplate.name];
     const resp = await trae.get(url);
 
     return {
-        ...page,
+        ...pageTemplate,
         $: cheerio.load(resp.data)
     };
 }
 
+/**
+ * Select attributes that have been listed in the Element* template and that are available at the node object
+ *
+ * @param {ElementEntity[]} collection
+ * @param {Node[]} $node
+ */
 function selectNodeAttributes(collection, $node) {
     if (!collection.hasOwnProperty("attrs")) return null;
     if (!Array.isArray(collection.attrs))
@@ -30,26 +42,40 @@ function selectNodeAttributes(collection, $node) {
     }, {});
 }
 
+/**
+ * Closure for avoiding multiple passing of cheerio object
+ *
+ * @param {Cheerio} $ Cheerio object after loading data
+ * @return Function
+ */
 function produceEntityCollection($) {
-    return function(entity) {
-        const { props, query: entityQuery } = entity;
+    /**
+     * It will extract data from HTML according to queries defined in templates
+     *
+     * @param {EntityTemplate}
+     */
+    return function(entityTemplate) {
+        const { props, query: entityQuery } = entityTemplate;
         const entityNodes = $(entityQuery);
 
         return entityNodes
             .map((i, entityNode) => {
                 const entityInstance = new Entity({
-                    name: entity.name,
-                    query: entity.query
+                    name: entityTemplate.name,
+                    query: entityTemplate.query
                 });
 
-                entityInstance.attrs = selectNodeAttributes(entity, entityNode);
-                entityInstance.props = props.map(prop => {
-                    const propNodes = $(prop.query, entityNode);
+                entityInstance.attrs = selectNodeAttributes(
+                    entityTemplate,
+                    entityNode
+                );
+                entityInstance.props = props.map(propTemplate => {
+                    const propNodes = $(propTemplate.query, entityNode);
                     const propsArray = propNodes
                         .map((j, propNode) => {
                             const propInstance = new Prop({
-                                name: prop.name,
-                                query: prop.query
+                                name: propTemplate.name,
+                                query: propTemplate.query
                             });
 
                             propInstance.value =
@@ -57,7 +83,7 @@ function produceEntityCollection($) {
                                     ? null
                                     : propNode.firstChild.data;
                             propInstance.attrs = selectNodeAttributes(
-                                prop,
+                                propTemplate,
                                 propNode
                             );
 
@@ -72,13 +98,23 @@ function produceEntityCollection($) {
     };
 }
 
-function populatePageCollections(page) {
-    const { $, collections } = page;
-
+/**
+ * Populates the page template collection with actual page entities
+ *
+ * @param {PageTemplate} page Page template object
+ * @return Array
+ */
+function populatePageCollections(pageTemplate) {
+    const { $, collections } = pageTemplate;
     return collections.map(produceEntityCollection($));
 }
 
-module.exports = async ({ url, pages }) => {
+/**
+ * Loader for scrapper
+ * @param {object} {url: string, pages: Array} - Url and Pages template collection
+ * @return Promise
+ */
+module.exports = async ({ pages }) => {
     try {
         pages = await Promise.all(pages.map(fetchHtmlAndAddCheerio));
         return pages.map(populatePageCollections);

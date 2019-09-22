@@ -1,14 +1,15 @@
 {
-  "name": "asamblea-audit",
+  "name": "asamblea-sv-scrapper",
   "version": "1.0.0",
-  "description": "This website will present the list of congressmen and women in the Legislative Assembly of El Salvador",
+  "description": "A web scrapper for www.asamble.gob.sv",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "website",
-    "assembly",
+    "asambleasv",
+    "asamblea",
+    "diputados",
     "elsalvador",
     "javascript"
   ],

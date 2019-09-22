@@ -3,11 +3,16 @@
 const { loader, config } = require("./src");
 
 // Use a nice table to print the report or error
-Promise.all([
+module.exports = Promise.all([
     loader({
-        url: config.URLS.congressMembers,
         pages: config.PAGES
     })
-])
-    .then(msg => console.log(msg))
-    .catch(err => console.error(err));
+]);
+
+module.exports
+    .then(then => {
+        return console.log(then);
+    })
+    .catch(error => {
+        return console.error(error);
+    });

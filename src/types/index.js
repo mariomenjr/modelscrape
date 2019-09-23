@@ -4,4 +4,4 @@ const Entity = require("./Entity");
 const Prop = require("./Prop");
 const Element = require("./Element");
 
-module.exports = { Element, Entity, Prop };
+module.exports = { Entity, Prop };

@@ -9,18 +9,20 @@ const config = require("./config");
  * - Normal Usage:
  * > `makeUrl()('endpoint-string')`
  * - Custom Usage:
- * > `makeUrl({domain: 'www.google.com', protocol: 'https'})('search?q=blabla')`
+ * > `makeUrl('https://www.google.com')('search?q=blabla')`
  *
  * @param {Object} params - { domain: String, protocol: String }
  * @returns {Function} URL maker
  */
-function makeUrl(
-    params = {
-        domain: config.ROOT_DOMAIN,
-        protocol: config.ROOT_PROTOCOL
-    }
-) {
-    return endpoint => `${params.protocol}://${params.domain}/${endpoint}`;
+function makeUrl(domain = `${config.ROOT_PROTOCOL}://${config.ROOT_DOMAIN}`) {
+    return endpoint => `${domain}/${endpoint}`;
 }
 
-module.exports = { makeUrl };
+function registerPagesUrl(pagesTemplate) {
+    return pagesTemplate.reduce((urls, { endpoint, name }) => {
+        urls[name] = makeUrl()(endpoint);
+        return urls;
+    }, {});
+}
+
+module.exports = { makeUrl, registerPagesUrl };

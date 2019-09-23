@@ -3,13 +3,17 @@
 const { loader, config } = require("./src");
 
 // Use a nice table to print the report or error
-module.exports = Promise.all([
-    loader({
+module.exports = (
+    params = {
+        url: `http://google.com`,
         pages: config.PAGES
-    })
-]);
+    }
+) => {
+    return loader(params);
+};
 
-module.exports
+module
+    .exports()
     .then(then => {
         return console.log(then);
     })

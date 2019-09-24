@@ -3,22 +3,29 @@
 const trae = require("trae");
 const cheerio = require("cheerio");
 
-const { URLS } = require("./config");
-const { Entity, Prop } = require("./types");
+const { makeUrl } = require("./config");
+const { Entity, Prop, Page } = require("./types");
 
-/**
- * Fetch HTML for PageTemplate
- *
- * @param {PageTemplate} pageTemplate
- * @return PageTemplate
- */
-async function fetchHtmlAndAddCheerio(pageTemplate) {
-    const url = URLS[pageTemplate.name];
-    const resp = await trae.get(url);
+const { validateParam, validateQuery } = require("./utils/validators");
 
-    return {
-        ...pageTemplate,
-        $: cheerio.load(resp.data)
+const { AttributeError } = require("./errors");
+
+function fetchHtmlAndAddCheerio(domain) {
+    const joinEndpoint = makeUrl(domain);
+    /**
+     * Fetch HTML for PageTemplate
+     *
+     * @param {Query} query It delivers the endpoint to be executed for the particular URL
+     * @return Page
+     */
+    return async function(query) {
+        const url = joinEndpoint(query.endpoint);
+        const resp = await trae.get(url);
+
+        const page = new Page(query);
+        page.setCheerio(cheerio.load(resp.data));
+
+        return page;
     };
 }
 
@@ -30,8 +37,7 @@ async function fetchHtmlAndAddCheerio(pageTemplate) {
  */
 function selectNodeAttributes(collection, $node) {
     if (!collection.hasOwnProperty("attrs")) return null;
-    if (!Array.isArray(collection.attrs))
-        throw Error("Element.attrs property must be type Array");
+    if (!Array.isArray(collection.attrs)) throw AttributeError.mustBeArray();
 
     return collection.attrs.reduce((attributes, current) => {
         attributes[current] =
@@ -52,30 +58,30 @@ function produceEntityCollection($) {
     /**
      * It will extract data from HTML according to queries defined in templates
      *
-     * @param {EntityTemplate}
+     * @param {EntityModel}
      */
-    return function(entityTemplate) {
-        const { props, query: entityQuery } = entityTemplate;
+    return function(entityModel) {
+        const { props, query: entityQuery } = entityModel;
         const entityNodes = $(entityQuery);
 
         return entityNodes
             .map((i, entityNode) => {
                 const entityInstance = new Entity({
-                    name: entityTemplate.name,
-                    query: entityTemplate.query
+                    name: entityModel.name,
+                    query: entityModel.query
                 });
 
                 entityInstance.attrs = selectNodeAttributes(
-                    entityTemplate,
+                    entityModel,
                     entityNode
                 );
-                entityInstance.props = props.map(propTemplate => {
-                    const propNodes = $(propTemplate.query, entityNode);
+                entityInstance.props = props.map(propModel => {
+                    const propNodes = $(propModel.query, entityNode);
                     const propsArray = propNodes
                         .map((j, propNode) => {
                             const propInstance = new Prop({
-                                name: propTemplate.name,
-                                query: propTemplate.query
+                                name: propModel.name,
+                                query: propModel.query
                             });
 
                             propInstance.value =
@@ -83,7 +89,7 @@ function produceEntityCollection($) {
                                     ? null
                                     : propNode.firstChild.data;
                             propInstance.attrs = selectNodeAttributes(
-                                propTemplate,
+                                propModel,
                                 propNode
                             );
 
@@ -114,10 +120,17 @@ function populatePageCollections(pageTemplate) {
  * @param {object} {url: string, pages: Array} - Url and Pages template collection
  * @return Promise
  */
-module.exports = async ({ pages }) => {
+module.exports = async param => {
     try {
-        pages = await Promise.all(pages.map(fetchHtmlAndAddCheerio));
-        return pages.map(populatePageCollections);
+        const { url, queryObjects: queryArray } = validateParam(param);
+
+        queryArray.forEach(validateQuery);
+
+        const pagesArray = await Promise.all(
+            queryArray.map(fetchHtmlAndAddCheerio(url))
+        );
+
+        return pagesArray.map(populatePageCollections);
     } catch (error) {
         return error;
     }

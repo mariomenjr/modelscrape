@@ -4,19 +4,10 @@ const { loader, config } = require("./src");
 
 // Use a nice table to print the report or error
 module.exports = (
-    params = {
+    scrapperObj = {
         url: `http://google.com`,
-        pages: config.PAGES
+        pages: config.PAGES_COLLECTION
     }
 ) => {
-    return loader(params);
+    return loader(scrapperObj);
 };
-
-module
-    .exports()
-    .then(then => {
-        return console.log(then);
-    })
-    .catch(error => {
-        return console.error(error);
-    });

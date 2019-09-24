@@ -1,8 +1,6 @@
 "use strict";
 
-const { makeUrl, registerPagesUrl } = require("./helpers");
-const { PAGES_COLLECTION: PAGES } = require("./config");
+const { PAGES_COLLECTION } = require("./config");
+const { makeUrl } = require("./helpers");
 
-const URLS = registerPagesUrl(PAGES);
-
-module.exports = { URLS, PAGES };
+module.exports = { PAGES_COLLECTION, makeUrl };

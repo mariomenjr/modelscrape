@@ -18,11 +18,4 @@ function makeUrl(domain = `${config.ROOT_PROTOCOL}://${config.ROOT_DOMAIN}`) {
     return endpoint => `${domain}/${endpoint}`;
 }
 
-function registerPagesUrl(pagesTemplate) {
-    return pagesTemplate.reduce((urls, { endpoint, name }) => {
-        urls[name] = makeUrl()(endpoint);
-        return urls;
-    }, {});
-}
-
-module.exports = { makeUrl, registerPagesUrl };
+module.exports = { makeUrl };

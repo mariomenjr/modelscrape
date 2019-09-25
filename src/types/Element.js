@@ -4,10 +4,9 @@ const { appendReadonlyProps } = require("../utils");
 
 module.exports = function Element(params = {}) {
     appendReadonlyProps(this, params, {
-        name: null,
-        query: null
+        name: null
     });
 
-    this.attrs = {};
+    this.attrs = [];
     this.value = null;
 };

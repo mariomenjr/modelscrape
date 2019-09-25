@@ -1,6 +1,6 @@
 # Scrappity
 
-Cheerio-based scrapping `helper` to create entities out of the target via JSON templates.
+Cheerio-based scrapping `helper` to create entities out of the target website via JSON templates.
 
 ## Features
 
@@ -11,7 +11,7 @@ Cheerio-based scrapping `helper` to create entities out of the target via JSON t
 
 Build on top of NodeJS v12.10.0.
 
-> **WARNING**: `NOT` TESTED ON PREVIOUS VERSIONS.
+> **WARNING**: NOT TESTED ON PREVIOUS VERSIONS.
 
 ## Installing
 
@@ -41,5 +41,38 @@ scrappity()
     })
     .catch(error => {
         console.error(error);
+    });
+
+// Using custom template
+scrappity({
+    url: "https://google.com",
+    queryObjects: [
+        {
+            name: "PupusasSearch",
+            endpoint: "search?q=pupusas",
+            collections: [
+                {
+                    name: "Search",
+                    query: ".ZINbbc > .kCrYT",
+                    props: [
+                        {
+                            name: "title",
+                            query: "a > div.vvjwJb"
+                        },
+                        {
+                            name: "url",
+                            query: "a > div.UPmit"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+})
+    .then(collection => {
+        return console.log(collection);
+    })
+    .catch(error => {
+        return console.error(error);
     });
 ```

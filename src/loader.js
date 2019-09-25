@@ -36,8 +36,12 @@ function fetchHtmlAndAddCheerio(domain) {
  * @param {Node[]} $node
  */
 function selectNodeAttributes(collection, $node) {
-    if (!collection.hasOwnProperty("attrs")) return null;
-    if (!Array.isArray(collection.attrs)) throw AttributeError.mustBeArray();
+    if (!collection.hasOwnProperty("attrs")) return {};
+    if (!Array.isArray(collection.attrs)) {
+        if (collection.attrs === undefined) return {};
+
+        throw AttributeError.mustBeArray();
+    }
 
     return collection.attrs.reduce((attributes, current) => {
         attributes[current] =
@@ -65,23 +69,21 @@ function produceEntityCollection($) {
         const entityNodes = $(entityQuery);
 
         return entityNodes
-            .map((i, entityNode) => {
+            .map((_, entityNode) => {
                 const entityInstance = new Entity({
-                    name: entityModel.name,
-                    query: entityModel.query
+                    name: entityModel.name
                 });
 
                 entityInstance.attrs = selectNodeAttributes(
                     entityModel,
                     entityNode
                 );
-                entityInstance.props = props.map(propModel => {
+                entityInstance.props = props.reduce((prop, propModel) => {
                     const propNodes = $(propModel.query, entityNode);
                     const propsArray = propNodes
-                        .map((j, propNode) => {
+                        .map((_, propNode) => {
                             const propInstance = new Prop({
-                                name: propModel.name,
-                                query: propModel.query
+                                name: propModel.name
                             });
 
                             propInstance.value =
@@ -96,8 +98,15 @@ function produceEntityCollection($) {
                             return propInstance;
                         })
                         .get();
-                    return propsArray.length > 1 ? propsArray : propsArray[0];
-                });
+
+                    prop[propModel.name] =
+                        propsArray.length > 0
+                            ? propsArray.length > 1
+                                ? propsArray
+                                : propsArray[0]
+                            : null;
+                    return prop;
+                }, {});
                 return entityInstance;
             })
             .get();

@@ -10,6 +10,12 @@ const { validateParam, validateQuery } = require("./utils/validators");
 
 const { AttributeError } = require("./errors");
 
+/**
+ * Set the base url for page templates
+ *
+ * @param {*} domain
+ * @return {Function}
+ */
 function fetchHtmlAndAddCheerio(domain) {
     const joinEndpoint = makeUrl(domain);
     /**
@@ -36,13 +42,16 @@ function fetchHtmlAndAddCheerio(domain) {
  * @param {Node[]} $node
  */
 function selectNodeAttributes(collection, $node) {
+    // Continue only if there's an attrs prop
     if (!collection.hasOwnProperty("attrs")) return {};
     if (!Array.isArray(collection.attrs)) {
         if (collection.attrs === undefined) return {};
 
+        // Dispatch error if the attrs prop is not an Array
         throw AttributeError.mustBeArray();
     }
 
+    // Collecting attributes. If not found, then null.
     return collection.attrs.reduce((attributes, current) => {
         attributes[current] =
             $node.attribs[current] !== undefined
@@ -60,7 +69,7 @@ function selectNodeAttributes(collection, $node) {
  */
 function produceEntityCollection($) {
     /**
-     * It will extract data from HTML according to queries defined in templates
+     * It will extract data from HTML according to queries defined in model
      *
      * @param {EntityModel}
      */
@@ -68,53 +77,65 @@ function produceEntityCollection($) {
         const { props, query: entityQuery } = entityModel;
         const entityNodes = $(entityQuery);
 
-        return entityNodes
-            .map((_, entityNode) => {
-                const entityInstance = new Entity({
-                    name: entityModel.name
-                });
+        return (
+            entityNodes
+                // .map method is Cheerios not the regular Array.map
+                .map((_, entityNode) => {
+                    const entityInstance = new Entity({
+                        name: entityModel.name
+                    });
 
-                entityInstance.attrs = selectNodeAttributes(
-                    entityModel,
-                    entityNode
-                );
-                entityInstance.props = props.reduce((prop, propModel) => {
-                    const propNodes = $(propModel.query, entityNode);
-                    const propsArray = propNodes
-                        .map((_, propNode) => {
-                            const propInstance = new Prop({
-                                name: propModel.name
-                            });
+                    entityInstance.attrs = selectNodeAttributes(
+                        entityModel,
+                        entityNode
+                    );
 
-                            propInstance.value =
-                                propNode.firstChild === null
-                                    ? null
-                                    : propNode.firstChild.data;
-                            propInstance.attrs = selectNodeAttributes(
-                                propModel,
-                                propNode
-                            );
+                    // In order to create an object for attributtes.
+                    // The provided name of the attribute will be used as key in obj.
+                    entityInstance.props = props.reduce((prop, propModel) => {
+                        const propNodes = $(propModel.query, entityNode);
+                        const propsArray = propNodes
+                            // .map method is Cheerios not the regular Array.map
+                            .map((_, propNode) => {
+                                const propInstance = new Prop({
+                                    name: propModel.name
+                                });
 
-                            return propInstance;
-                        })
-                        .get();
+                                // If no text-type node is found, then null.
+                                propInstance.value =
+                                    propNode.firstChild === null
+                                        ? null
+                                        : propNode.firstChild.data;
 
-                    prop[propModel.name] =
-                        propsArray.length > 0
-                            ? propsArray.length > 1
-                                ? propsArray
-                                : propsArray[0]
-                            : null;
-                    return prop;
-                }, {});
-                return entityInstance;
-            })
-            .get();
+                                propInstance.attrs = selectNodeAttributes(
+                                    propModel,
+                                    propNode
+                                );
+
+                                return propInstance;
+                            })
+                            .get();
+
+                        // I know... it can be simpler. You are welcome to submit a PR :)
+                        // If not a valid item, then null
+                        prop[propModel.name] =
+                            propsArray.length > 0
+                                ? propsArray.length > 1
+                                    ? propsArray
+                                    : propsArray[0]
+                                : null;
+                        return prop;
+                    }, {});
+
+                    return entityInstance;
+                })
+                .get()
+        );
     };
 }
 
 /**
- * Populates the page template collection with actual page entities
+ * Populates the page template collection with actual entities
  *
  * @param {PageTemplate} page Page template object
  * @return Array
@@ -125,7 +146,8 @@ function populatePageCollections(pageTemplate) {
 }
 
 /**
- * Loader for scrapper
+ * Loader for scrapping
+ *
  * @param {object} {url: string, pages: Array} - Url and Pages template collection
  * @return Promise
  */
@@ -143,5 +165,4 @@ module.exports = async param => {
     } catch (error) {
         return error;
     }
-    // Sent back a report of what happened
 };

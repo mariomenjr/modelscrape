@@ -1,5 +1,7 @@
 "use strict";
 
+const { ParamError, ModelError } = require("../errors");
+
 function _hasProperty(object) {
     return function(propName) {
         if (!object.hasOwnProperty(propName))
@@ -13,10 +15,9 @@ const PARAM_REQ_PROPS = ["url", "queryObjects"];
 function validateParam(param) {
     PARAM_REQ_PROPS.forEach(_hasProperty(param));
 
-    if (!PARAM_URL_REGEX.test(param.url))
-        throw Error("An invalid URL has been provided.");
+    if (!PARAM_URL_REGEX.test(param.url)) throw ParamError.invalidURL();
     if (!Array.isArray(param.queryObjects))
-        throw Error("An invalid {queryObject} collection has been provided.");
+        throw ParamError.invalidQueryObjects();
 
     return param;
 }
@@ -26,18 +27,20 @@ function validateQuery(query) {
     QUERY_REQ_PROPS.forEach(_hasProperty(query));
 
     if (!Array.isArray(query.collections))
-        throw Error("An invalid {collections} property.");
+        throw ModelError.invalidProperty("collections");
 
     return query;
 }
 
 function validatePageCollections(collections) {
-    if (!Array.isArray(collections)) throw Error("Collection must be Array");
+    if (!Array.isArray(collections))
+        throw ModelError.invalidPropertyType("collections", "Array");
     return mapper => collections.map(mapper);
 }
 
 function validateEntityProps(props) {
-    if (!Array.isArray(props)) throw Error("Props must be Array");
+    if (!Array.isArray(props))
+        throw ModelError.invalidPropertyType("props", "Array");
     return mapper => props.map(mapper);
 }
 

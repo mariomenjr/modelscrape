@@ -1,22 +1,23 @@
 {
-  "name": "entity-scrapper",
-  "version": "1.0.0",
-  "description": "A web scrapper for www.asamble.gob.sv",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "asambleasv",
-    "asamblea",
-    "diputados",
-    "elsalvador",
-    "javascript"
-  ],
-  "author": "@mariomenjr",
-  "license": "MIT",
-  "dependencies": {
-    "cheerio": "^1.0.0-rc.3",
-    "trae": "^1.4.2"
-  }
+    "name": "scrappity",
+    "version": "1.0.0",
+    "description": "Cheerio-based scrapping helper to create entities out of the target website via JSON templates.",
+    "main": "app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "scrappity",
+        "cheerio",
+        "elsalvador",
+        "javascript",
+        "web",
+        "scrapper"
+    ],
+    "author": "@mariomenjr",
+    "license": "MIT",
+    "dependencies": {
+        "cheerio": "^1.0.0-rc.3",
+        "trae": "^1.4.2"
+    }
 }

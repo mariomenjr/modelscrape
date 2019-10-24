@@ -103,9 +103,23 @@ function produceEntityCollection($) {
 
                                 // If no text-type node is found, then null.
                                 propInstance.value =
-                                    propNode.firstChild === null
-                                        ? null
-                                        : propNode.firstChild.data;
+                                    propNode.nodeType === 1
+                                        ? propNode.children.length > 0
+                                            ? propNode.children
+                                                  .map(child =>
+                                                      child.nodeType === 3
+                                                          ? child.data
+                                                          : null
+                                                  )
+                                                  .filter(
+                                                      item =>
+                                                          item !== null &&
+                                                          item !== undefined
+                                                  )
+                                            : null
+                                        : propNode.nodeType === 3
+                                        ? propNode.data
+                                        : null;
 
                                 propInstance.attrs = selectNodeAttributes(
                                     propModel,

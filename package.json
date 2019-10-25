@@ -1,6 +1,6 @@
 {
     "name": "scrappity",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "description": "Cheerio-based scrapping helper to create entities out of the target website via JSON templates.",
     "main": "app.js",
     "scripts": {

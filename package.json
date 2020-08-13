@@ -21,6 +21,6 @@
         "trae": "^1.4.2"
     },
     "devDependencies": {
-        "eslint": "^6.4.0"
+        "eslint": "^6.8.0"
     }
 }

@@ -1,30 +1,24 @@
-# Scrappity
+# modelscrape
 
-Cheerio-based scrapping `helper` to create entities out of the target website via JSON templates.
+Cheerio-based scraping helper to scrape websites based on models/templates.
 
 ## Features
 
--   Template based definition of an entity
--   Multiple entity definition in a single template
-
-## Nodejs support
-
-Build on top of NodeJS v12.10.0.
-
-> **WARNING**: NOT TESTED ON PREVIOUS VERSIONS.
+-   Template based scraping.
+-   Multiple entity definition in a single template.
 
 ## Installing
 
 Using npm:
 
 ```bash
-$ npm install scrappity
+$ npm install modelscrape
 ```
 
 or from github:
 
 ```bash
-$ npm install mariomenjr/scrappity
+$ npm install mariomenjr/modelscrape
 ```
 
 ## Example
@@ -32,19 +26,19 @@ $ npm install mariomenjr/scrappity
 Basic usage:
 
 ```js
-const scrappity = require("scrappity");
+const modelscrape = require("modelscrape");
 
 // Using pre-loaded template
-scrappity()
-    .then(collection => {
+modelscrape()
+    .then((collection) => {
         console.log(collection);
     })
-    .catch(error => {
+    .catch((error) => {
         console.error(error);
     });
 
 // Using custom template
-scrappity({
+modelscrape({
     url: "https://google.com",
     queryObjects: [
         {
@@ -57,22 +51,22 @@ scrappity({
                     props: [
                         {
                             name: "title",
-                            query: "a > div.vvjwJb"
+                            query: "a > div.vvjwJb",
                         },
                         {
                             name: "url",
-                            query: "a > div.UPmit"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
+                            query: "a > div.UPmit",
+                        },
+                    ],
+                },
+            ],
+        },
+    ],
 })
-    .then(collection => {
+    .then((collection) => {
         return console.log(collection);
     })
-    .catch(error => {
+    .catch((error) => {
         return console.error(error);
     });
 ```

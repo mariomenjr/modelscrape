@@ -1,18 +1,22 @@
 {
-    "name": "scrappity",
-    "version": "1.0.3",
-    "description": "Cheerio-based scrapping helper to create entities out of the target website via JSON templates.",
+    "name": "modelscrape",
+    "version": "1.0.4",
+    "description": "Cheerio-based scraping helper to scrape websites based on models/templates.",
     "main": "app.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/mariomenjr/modelscrape.git"
+    },
     "keywords": [
-        "scrappity",
+        "modelscrape",
         "cheerio",
         "elsalvador",
         "javascript",
         "web",
-        "scrapper"
+        "scraper"
     ],
     "author": "@mariomenjr",
     "license": "MIT",
@@ -22,5 +26,8 @@
     },
     "devDependencies": {
         "eslint": "^6.8.0"
+    },
+    "engines": {
+        "node": ">=10"
     }
 }

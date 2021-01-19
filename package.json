@@ -4,7 +4,7 @@
     "description": "Cheerio-based scraping helper to scrape websites based on models/templates.",
     "main": "app.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "jest"
     },
     "repository": {
         "type": "git",
@@ -25,7 +25,8 @@
         "trae": "^1.4.2"
     },
     "devDependencies": {
-        "eslint": "^6.8.0"
+        "eslint": "^6.8.0",
+        "jest": "^26.6.3"
     },
     "engines": {
         "node": ">=10"

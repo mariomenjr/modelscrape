@@ -21,7 +21,7 @@
     "author": "@mariomenjr",
     "license": "MIT",
     "dependencies": {
-        "cheerio": "^1.0.0-rc.3",
+        "cheerio": "^1.0.0-rc.5",
         "trae": "^1.4.2"
     },
     "devDependencies": {

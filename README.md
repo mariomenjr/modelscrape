@@ -1,13 +1,13 @@
 # modelscrape
 
-Cheerio-based scraping helper to scrape websites based on models/templates.
+Cheerio-based helper to scrape websites based on models/templates.
 
 ## Features
 
--   Template based scraping.
--   Multiple entity definition in a single template.
+- Model/template based scraping.
+- Multiple entity definition in a single template to scrap more than one section at a time.
 
-## Installing
+## Install
 
 Using npm:
 
@@ -28,45 +28,37 @@ Basic usage:
 ```js
 const modelscrape = require("modelscrape");
 
-// Using pre-loaded template
-modelscrape()
-    .then((collection) => {
-        console.log(collection);
-    })
-    .catch((error) => {
-        console.error(error);
-    });
+// To execute the preloaded template
+const collection = await modelscrape();
 
-// Using custom template
-modelscrape({
-    url: "https://google.com",
-    queryObjects: [
+// To execute a custom template
+const collection = await modelscrape({
+  url: "https://google.com",
+  queryObjects: [
+    {
+      name: "PupusasGoogleSearch",
+      endpoint: "search?q=pupusas",
+      collections: [
         {
-            name: "PupusasSearch",
-            endpoint: "search?q=pupusas",
-            collections: [
-                {
-                    name: "Search",
-                    query: ".ZINbbc > .kCrYT",
-                    props: [
-                        {
-                            name: "title",
-                            query: "a > div.vvjwJb",
-                        },
-                        {
-                            name: "url",
-                            query: "a > div.UPmit",
-                        },
-                    ],
-                },
-            ],
+          name: "Search",
+          query: ".ZINbbc > .kCrYT",
+          props: [
+            {
+              name: "title",
+              query: "a > div.vvjwJb",
+            },
+            {
+              name: "url",
+              query: "a > div.UPmit",
+            },
+          ],
         },
-    ],
-})
-    .then((collection) => {
-        return console.log(collection);
-    })
-    .catch((error) => {
-        return console.error(error);
-    });
+      ],
+    },
+  ],
+});
 ```
+
+## License
+
+The source code of this project is under [MIT License](https://opensource.org/licenses/MIT).

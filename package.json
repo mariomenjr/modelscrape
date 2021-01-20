@@ -21,6 +21,7 @@
     "author": "@mariomenjr",
     "license": "MIT",
     "dependencies": {
+        "@types/node": "^14.14.22",
         "cheerio": "^1.0.0-rc.5",
         "trae": "^1.4.2"
     },

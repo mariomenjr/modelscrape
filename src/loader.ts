@@ -24,7 +24,7 @@ function fetchHtmlAndAddCheerio(domain) {
      * @param {Query} query It delivers the endpoint to be executed for the particular URL
      * @return Page
      */
-    return async function(query) {
+    return async function (query) {
         const url = joinEndpoint(query.endpoint);
         const resp = await trae.get(url);
 
@@ -73,7 +73,7 @@ function produceEntityCollection($) {
      *
      * @param {EntityModel}
      */
-    return function(entityModel) {
+    return function (entityModel) {
         const { props, query: entityQuery } = entityModel;
         const entityNodes = $(entityQuery);
 
@@ -82,7 +82,7 @@ function produceEntityCollection($) {
                 // .map method is Cheerios not the regular Array.map
                 .map((_, entityNode) => {
                     const entityInstance = new Entity({
-                        name: entityModel.name
+                        name: entityModel.name,
                     });
 
                     entityInstance.attrs = selectNodeAttributes(
@@ -98,7 +98,7 @@ function produceEntityCollection($) {
                             // .map method is Cheerios not the regular Array.map
                             .map((_, propNode) => {
                                 const propInstance = new Prop({
-                                    name: propModel.name
+                                    name: propModel.name,
                                 });
 
                                 // If no text-type node is found, then null.
@@ -106,13 +106,13 @@ function produceEntityCollection($) {
                                     propNode.nodeType === 1
                                         ? propNode.children.length > 0
                                             ? propNode.children
-                                                  .map(child =>
+                                                  .map((child) =>
                                                       child.nodeType === 3
                                                           ? child.data
                                                           : null
                                                   )
                                                   .filter(
-                                                      item =>
+                                                      (item) =>
                                                           item !== null &&
                                                           item !== undefined
                                                   )
@@ -165,7 +165,7 @@ function populatePageCollections(pageTemplate) {
  * @param {object} {url: string, pages: Array} - Url and Pages template collection
  * @return Promise
  */
-module.exports = async param => {
+module.exports = async (param) => {
     try {
         const { url, queryObjects: queryArray } = validateParam(param);
 
